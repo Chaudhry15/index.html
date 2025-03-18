@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journaya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container, .data-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            width: 40%;
+        }
+        h2 {
+            text-align: center;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logout {
+            float: right;
+            background-color: red;
+            padding: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .time-info {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Journaya</h2>
+    <a href="#" class="logout">Log out</a>
+
+    <div class="container">
+        <div class="form-container">
+            <label for="phone">Phone</label>
+            <input type="text" id="phone">
+
+            <label for="zipcode">Zip code</label>
+            <input type="text" id="zipcode">
+
+            <label for="state">State</label>
+            <select id="state">
+                <option value="">Select State</option>
+            </select>
+
+            <button onclick="submitForm()">Submit</button>
+        </div>
+
+        <div class="data-container" id="output">
+            <h3>Submitted Data</h3>
+            <p><strong>Phone:</strong> <span id="outPhone"></span></p>
+            <p><strong>Submitted at:</strong> <span id="submittedTime" class="time-info"></span></p>
+            <p><strong>Generated at:</strong> <span id="generatedTime" class="time-info"></span></p>
+            <p><strong>Token ID:</strong> <span id="tokenId"></span></p>
+            <p><strong>Zip Code:</strong> <span id="outZip"></span></p>
+            <p><strong>State:</strong> <span id="outState"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // List of all 52 states (50 states + DC + Puerto Rico)
+        const states = [
+            "Alabama", "Alaska", "Arizona", "Arkansas", "California", "Colorado", "Connecticut", "Delaware", "Florida", "Georgia",
+            "Hawaii", "Idaho", "Illinois", "Indiana", "Iowa", "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland",
+            "Massachusetts", "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska", "Nevada", "New Hampshire", "New Jersey",
+            "New Mexico", "New York", "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon", "Pennsylvania", "Rhode Island", "South Carolina",
+            "South Dakota", "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington", "West Virginia", "Wisconsin", "Wyoming",
+            "District of Columbia", "Puerto Rico"
+        ];
+
+        // Populate the state dropdown
+        const stateSelect = document.getElementById("state");
+        states.forEach(state => {
+            const option = document.createElement("option");
+            option.value = state;
+            option.textContent = state;
+            stateSelect.appendChild(option);
+        });
+
+        // Function to generate a Token ID (same format as image)
+        function generateTokenId() {
+            const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            function getRandomChunk(length) {
+                return Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+            }
+            return `${getRandomChunk(8)}-${getRandomChunk(4)}-${getRandomChunk(4)}-${getRandomChunk(4)}-${getRandomChunk(12)}`;
+        }
+
+        function submitForm() {
+            const phone = document.getElementById("phone").value;
+            const zipcode = document.getElementById("zipcode").value;
+            const state = document.getElementById("state").value;
+
+            if (!phone || !zipcode || !state) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            const submittedTime = new Date().toLocaleString();
+            const generatedTime = new Date(new Date().getTime() + 2 * 60000).toLocaleString(); // Adds 2 minutes
+
+            document.getElementById("outPhone").textContent = phone;
+            document.getElementById("submittedTime").textContent = submittedTime;
+            document.getElementById("generatedTime").textContent = generatedTime;
+            document.getElementById("tokenId").textContent = generateTokenId();
+            document.getElementById("outZip").textContent = zipcode;
+            document.getElementById("outState").textContent = state;
+        }
+    </script>
+
+</body>
+</html>
