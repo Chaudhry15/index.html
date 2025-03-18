@@ -133,15 +133,27 @@
                 return;
             }
 
+            const tokenId = generateTokenId();
             const submittedTime = new Date().toLocaleString();
             const generatedTime = new Date(new Date().getTime() + 2 * 60000).toLocaleString(); // Adds 2 minutes
 
+            // Display the data
             document.getElementById("outPhone").textContent = phone;
             document.getElementById("submittedTime").textContent = submittedTime;
             document.getElementById("generatedTime").textContent = generatedTime;
-            document.getElementById("tokenId").textContent = generateTokenId();
+            document.getElementById("tokenId").textContent = tokenId;
             document.getElementById("outZip").textContent = zipcode;
             document.getElementById("outState").textContent = state;
+
+            // Send data to Google Sheets
+            fetch("https://script.google.com/macros/s/AKfycby0sl9l9eO1P1P5FHXhDyMTZMRXXqm4LSeLR0GkJevyrMKQ4oyYZkN50jYF2n4muBYJ/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ phone, zipcode, state, tokenId })
+            })
+            .then(response => response.json())
+            .then(data => console.log("Data saved:", data))
+            .catch(error => console.error("Error:", error));
         }
     </script>
 
